@@ -11,7 +11,7 @@ excel_file = openpyxl.Workbook()
 excel_sheet = excel_file.active
 excel_sheet.column_dimensions["B"].width = 100
 excel_sheet.column_dimensions["C"].width = 100
-excel_sheet.append(["랭킹", "제목", "몰이름", "링크"])
+excel_sheet.append(["랭킹", "제목", "최저가", "최고가", "몰이름", "링크"])
 
 
 client_id = "h5dpSfKrVTjaKh0ckcUw"
@@ -19,7 +19,7 @@ client_secret = "ThoKgI5GGT"
 
 for index in range(10):
     start_number = start + (index * 10)
-    encText = urllib.parse.quote("마우스")
+    encText = urllib.parse.quote("BG0MTN703PI")
     url = (
         "https://openapi.naver.com/v1/search/shop.json?query="
         + encText
@@ -36,10 +36,19 @@ for index in range(10):
     if rescode == 200:
         # response_body = response.read()
         # data = response_body.decode("urf-8")
-        data = json.load(response)
+        data = json.loads(response.read().decode("utf-8"))
         for item in data["items"]:
             num += 1
-            excel_sheet.append([num, item["title"], item["mallName"], item["link"]])
+            excel_sheet.append(
+                [
+                    num,
+                    item["title"],
+                    item["lprice"],
+                    item["hprice"],
+                    item["mallName"],
+                    item["link"],
+                ]
+            )
 
         # print(response_body.decode("utf-8"))
     else:
